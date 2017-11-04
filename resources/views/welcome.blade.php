@@ -7,6 +7,7 @@
     <!-- The above 3 meta tags *must* come first in the head; any other head content must come *after* these tags -->
     <meta name="description" content="">
     <meta name="author" content="">
+    <meta name="csrf-token" content="{{csrf_token()}}">
     <link rel="icon" href="{{ asset('assets/bootstrap/favicon.ico') }}">
 
     <title>Fixed Top Navbar Example for Bootstrap</title>
@@ -110,6 +111,7 @@
     <!-- Placed at the end of the document so the pages load faster -->
     <script src="{{ asset('assets/jquery/jquery-1.12.4.min.js') }}"></script>
     <script src="{{ asset('assets/bootstrap/js/bootstrap.min.js') }}"></script>
+    <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
 
     {{-- dataTables --}}
     <script src="{{ asset('assets/dataTables/js/jquery.dataTables.min.js') }}"></script>
@@ -149,6 +151,75 @@
         $('.modal-title').text('Add Contact');
       }
 
+      // function editForm(id){
+      //   save_method = 'edit';
+      //   $('input[name=_method]').val('PATCH');
+      //   $('#modal-form form')[0].reset();
+
+      //   $.ajax({
+
+      //       url:"{{'contact'}}"+'/'+id+"/edit",
+      //       type:"GET",
+      //       dataType:"JSON",
+      //       success:function(data){
+
+      //         $('#modal-form').modal('show');
+      //         $('.modal-title').text('Edit');
+
+      //         $('#id').val(data.id);
+      //         $('#name').val(data.name);
+      //         $('#email').val(data.email);
+
+
+
+      //       },
+      //       error:function(){
+
+      //           alert('Nothing Data');
+      //       }
+
+      //   });
+      // }
+
+      function deleteData(id){
+        var csrf =  $('meta[name="csrf-token"]').attr('content');
+        swal({
+
+              title:'Yakin?',
+              text:"Menghapus data?",
+              type:"warning",
+              showCancelButton:true,
+              cancelBuuttonColor:"#d33",
+              confirmButtonColor:"#308506",
+              confirmButtonText:"Ya, Hapus data"
+
+        }).then(function(){
+          $.ajax({
+                url:"{{url('contact')}}"+'/'+id,
+                type:"POST",
+                data:{'_method':'DELETE','_token':csrf},
+                success:function($data){
+                    data.ajax.reload();
+
+                    swal({
+                      title:'Success',
+                      text:'Data Terhapus',
+                      icon:'success',
+                      timer:'1500'
+                    })
+                },
+                error:function(){
+                  swal({
+                      title:'Fail',
+                      text:'Data Gagal Terhapus',
+                      icon:'error',
+                      timer:'1500'
+                  })
+                }
+          });
+        });
+      }
+
       $(function () {
         $('#modal-form form').validator().on('submit',function (e) {
 
@@ -168,13 +239,26 @@
                 type:"POST",
                 data:$('#modal-form form').serialize(),
                 success:function($data){
-
                   $('#modal-form').modal('hide');
-                  data.ajax.reload();
+                  data.ajax.reload(); 
+                  swal({
+                    title: "Alhamdulillah",
+                    text: "Data Added",
+                    icon: "success",
+                    timer:"1500"
+                })
+
+                   
+
 
                 },
                 error:function(){
-                  alert('Terjadi Error');
+                 swal({
+                    title: "Oww!",
+                    text: "Something wrong!",
+                    type: "error",
+                    timer:"1500"
+                })
                 }
             });
             return false;
