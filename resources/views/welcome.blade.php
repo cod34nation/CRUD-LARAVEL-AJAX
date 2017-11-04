@@ -151,35 +151,35 @@
         $('.modal-title').text('Add Contact');
       }
 
-      // function editForm(id){
-      //   save_method = 'edit';
-      //   $('input[name=_method]').val('PATCH');
-      //   $('#modal-form form')[0].reset();
+      function editForm(id){
+        save_method = 'edit';
+        $('input[name=_method]').val('PATCH');
+        $('#modal-form form')[0].reset();
 
-      //   $.ajax({
+        $.ajax({
 
-      //       url:"{{'contact'}}"+'/'+id+"/edit",
-      //       type:"GET",
-      //       dataType:"JSON",
-      //       success:function(data){
+            url:"{{'contact'}}"+'/'+id+"/edit",
+            type:"GET",
+            dataType:"JSON",
+            success:function(data){
 
-      //         $('#modal-form').modal('show');
-      //         $('.modal-title').text('Edit');
+              $('#modal-form').modal('show');
+              $('.modal-title').text('Edit');
 
-      //         $('#id').val(data.id);
-      //         $('#name').val(data.name);
-      //         $('#email').val(data.email);
+              $('#id').val(data.id);
+              $('#name').val(data.name);
+              $('#email').val(data.email);
 
 
 
-      //       },
-      //       error:function(){
+            },
+            error:function(){
 
-      //           alert('Nothing Data');
-      //       }
+                alert('Nothing Data');
+            }
 
-      //   });
-      // }
+        });
+      }
 
       function deleteData(id){
         var csrf =  $('meta[name="csrf-token"]').attr('content');
